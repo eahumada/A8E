@@ -36,8 +36,8 @@ u32 lLastTicks = 0;
 u32 lCounter;
 u8 cDisassembleFlag = 0;
 u64 llCycles = CYCLES_PER_LINE * LINES_PER_SCREEN_PAL;
-u32 lMode = 1;
-char *pDiskFileName = NULL; // "d1.atr";
+u32 lMode = 0;
+char *pDiskFileName = "assets/d1.atr";
 u32 lScreenWidth = 0;
 u32 lScreenHeight = 0;
 u32 lIndex;
@@ -144,7 +144,7 @@ static void draw() {
 
         Uint8 * pixels = pSurface->pixels;
         
-        for (int i=4000; i < 10000; i++) {
+        for (int i=4000; i < 20000; i++) {
             char randomByte = rand() % 255;
             pixels[i] = randomByte;
         }

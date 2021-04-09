@@ -114,7 +114,8 @@ var Module = typeof Module !== 'undefined' ? Module : {};
       function assert(check, msg) {
         if (!check) throw msg + new Error().stack;
       }
-  
+  Module['FS_createPath']('/', 'assets', true, true);
+
       /** @constructor */
       function DataRequest(start, end, audio) {
         this.start = start;
@@ -186,7 +187,7 @@ var Module = typeof Module !== 'undefined' ? Module : {};
     }
   
    }
-   loadPackage({"files": [{"filename": "/ATARIBAS.ROM", "start": 0, "end": 8192, "audio": 0}, {"filename": "/ATARIXL.ROM", "start": 8192, "end": 24576, "audio": 0}, {"filename": "/d1.atr", "start": 24576, "end": 116752, "audio": 0}], "remote_package_size": 116752, "package_uuid": "fddc23ad-a1d9-4619-98d2-054035a45640"});
+   loadPackage({"files": [{"filename": "/assets/D1.ATR", "start": 0, "end": 92176, "audio": 0}, {"filename": "/assets/ATARIBAS.ROM", "start": 92176, "end": 100368, "audio": 0}, {"filename": "/assets/ATARIXL.ROM", "start": 100368, "end": 116752, "audio": 0}], "remote_package_size": 116752, "package_uuid": "5cb085de-722c-4e7b-b8a6-907d53cdf04f"});
   
   })();
   
@@ -1299,9 +1300,9 @@ function updateGlobalBufferAndViews(buf) {
   Module['HEAPF64'] = HEAPF64 = new Float64Array(buf);
 }
 
-var STACK_BASE = 5257216,
+var STACK_BASE = 5257248,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 14336;
+    STACK_MAX = 14368;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 
@@ -1780,7 +1781,7 @@ var tempI64;
 // === Body ===
 
 var ASM_CONSTS = {
-  2073: function() {SDL.defaults.copyOnLock = false; SDL.defaults.discardOnLock = false; SDL.defaults.opaqueFrontBuffer = true; Module.screenIsReadOnly = false;}
+  2087: function() {SDL.defaults.copyOnLock = false; SDL.defaults.discardOnLock = false; SDL.defaults.opaqueFrontBuffer = true; Module.screenIsReadOnly = false;}
 };
 
 

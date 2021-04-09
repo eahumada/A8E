@@ -2589,12 +2589,12 @@ void AtariIoOpen(_6502_Context_t *pContext, u32 lMode, char *pDiskFileName)
 	pIoData->pSelfTestRom = malloc(0x0800);
 	pIoData->pFloatingPointRom = malloc(0x2800);
 
-	pFile = fopen("ATARIBAS.ROM", "rb");
+	pFile = fopen("assets/ATARIBAS.ROM", "rb");
 	fread(pIoData->pBasicRom, 0x2000, 1, pFile);
 	memcpy(&RAM[0xa000], pIoData->pBasicRom, 0x2000);
 	fclose(pFile);
 
-	pFile = fopen("ATARIXL.ROM", "rb");
+	pFile = fopen("assets/ATARIXL.ROM", "rb");
 	fread(pIoData->pOsRom, 0x1000, 1, pFile);
 	memcpy(&RAM[0xc000], pIoData->pOsRom, 0x1000);
 	fread(pIoData->pSelfTestRom, 0x0800, 1, pFile);

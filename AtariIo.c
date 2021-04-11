@@ -340,9 +340,12 @@ static void AtariIo_CreatePalette()
 
 static void AtariIo_FillRect(
 	SDL_Surface *pSurface, u32 lX, u32 lY, u32 lW, u32 lH, u8 cColor)
-    {    
+    {
+        
+        u8 bpp=pSurface->format->BytesPerPixel;  // EA
+        
     u32 lOldW = lW;
-	u8 *pScreen = pSurface->pixels + lY * PIXELS_PER_LINE + lX;
+	u8 *pScreen = pSurface->pixels + lY * PIXELS_PER_LINE*bpp + lX;
 
     while(lH--)
 	{
@@ -351,7 +354,7 @@ static void AtariIo_FillRect(
         
 		lW = lOldW;
 		
-		pScreen += PIXELS_PER_LINE - lW;
+		pScreen += PIXELS_PER_LINE*bpp - lW;
 	}
     
 }
@@ -1377,14 +1380,17 @@ void AtariIoFetchLine(_6502_Context_t *pContext)
 void AtariIoDrawLine(_6502_Context_t *pContext)
 {
 	IoData_t *pIoData = (IoData_t *)pContext->pIoData;
-	u32 lPlayfieldPixelsPerLine = 192 + (SRAM[IO_DMACTL] & 0x03) * 64;	
+    
+    u8 bpp=pIoData->tVideoData.pSdlAtariSurface->format->BytesPerPixel;  // EA
+    
+    u32 lPlayfieldPixelsPerLine = 192 + (SRAM[IO_DMACTL] & 0x03) * 64;
 
-	u8 aBackgroundColorTable[4] = 
+	u8 aBackgroundColorTable[4] =
 	{ 
 		SRAM[IO_COLBK], SRAM[IO_COLBK], SRAM[IO_COLPM0_TRIG2], (SRAM[IO_COLBK] & 0xf0)
 	};
-   				
-	u8 cBackgroundColor = aBackgroundColorTable[SRAM[IO_PRIOR] >> 6];
+   	
+    u8 cBackgroundColor =aBackgroundColorTable[SRAM[IO_PRIOR] >> 6];
 
 	if(pIoData->tVideoData.lCurrentDisplayLine < FIRST_VISIBLE_LINE ||
 		pIoData->tVideoData.lCurrentDisplayLine > LAST_VISIBLE_LINE)
@@ -1409,13 +1415,13 @@ void AtariIoDrawLine(_6502_Context_t *pContext)
 			u32 lLeftBorderSize = 0;
 			u32 lRightBorderSize = 0;
 
-			pIoData->tDrawLineData.pDestination = 
+            pIoData->tDrawLineData.pDestination =
 				pIoData->tVideoData.pSdlAtariSurface->pixels + 
-				pIoData->tVideoData.lCurrentDisplayLine * PIXELS_PER_LINE;
+				pIoData->tVideoData.lCurrentDisplayLine * PIXELS_PER_LINE * bpp; // EA
 				
 			pIoData->tDrawLineData.pPriorityData = 
                 pIoData->tVideoData.pPriorityData +
-				pIoData->tVideoData.lCurrentDisplayLine * PIXELS_PER_LINE;
+				pIoData->tVideoData.lCurrentDisplayLine * PIXELS_PER_LINE; // EA
 				
             switch(SRAM[IO_DMACTL] & 0x03)
             {
@@ -1495,10 +1501,11 @@ void AtariIoDrawLine(_6502_Context_t *pContext)
 			pIoData->tVideoData.pSdlAtariSurface, 
 			0, 
 			pIoData->tVideoData.lCurrentDisplayLine, 
-			PIXELS_PER_LINE,
+			PIXELS_PER_LINE*bpp,
 			1,
 			cBackgroundColor);
 	}
+
 }
 
 #define DRAW_PLAYER_PIXEL(offset) \
@@ -2558,9 +2565,9 @@ void AtariIoOpen(_6502_Context_t *pContext, u32 lMode, char *pDiskFileName)
 		PIXELS_PER_LINE, 
 		312, 
 		8,
-        0, // 0x000000ff,
-        0, // 0x0000ff00,
-        0, // 0x00ff0000,
+        0x000000ff,
+        0x0000ff00,
+        0x00ff0000,
         0
         );
 
@@ -2573,12 +2580,22 @@ void AtariIoOpen(_6502_Context_t *pContext, u32 lMode, char *pDiskFileName)
 
     printf("pSdlAtariSurface");
     printf("BPP is %d\n", pSdlAtariSurface->format->BitsPerPixel);
+    printf("BytesPP is %d\n", pSdlAtariSurface->format->BytesPerPixel);
 
 	AtariIo_CreatePalette();
 
 	SDL_SetPalette(pSdlAtariSurface, SDL_LOGPAL | SDL_PHYSPAL, m_aAtariColors, 0, 256);
-    
-    SDL_FillRect(pSdlAtariSurface, NULL, SDL_MapRGBA(pSdlAtariSurface->format, 0, 0, 64, 255));
+
+    // This is required for some reason by scripten.
+    SDL_FillRect(pSdlAtariSurface, NULL, SDL_MapRGBA(pSdlAtariSurface->format, 0, 0, 0, 255));
+
+    // Test pSdlAtariSurface
+    SDL_Rect rect;
+    rect.x = 150;
+    rect.y = 150;
+    rect.w = 100;
+    rect.h = 50;
+    if(SDL_FillRect(pSdlAtariSurface,&rect,SDL_MapRGBA(pSdlAtariSurface->format,255,255,255,255)) != 0) printf("Error drawing surface");
 
 	pIoData = malloc(sizeof(IoData_t));
 	pContext->pIoData = pIoData;

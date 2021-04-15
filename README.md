@@ -1,19 +1,60 @@
 # A8E
+
 Fork from original A8E sources provided by the author Sacha Springer http://www.zerstoerung.de/
 
 
-To compile with Xcode:
+## To compile for mac:
 
-1) Get SDL directories
-eahumada@TARDIS eahumada %  sdl-config --cflags --libs
+### Pre-requisites:
+```
+brew install sdl
+brew install sdl-image
+```
+
+### 1) Get SDL directories
+```
+xxxxx@TARDIS%  sdl-config --cflags --libs
+output:
 -I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 -L/usr/local/lib -lSDLmain -lSDL -Wl,-framework,Cocoa
+```
 
-
+```
+output
 % /usr/local/Cellar/sdl2/2.0.14_1/bin/sdl2-config --cflags 
 -I/usr/local/include/SDL2 -D_THREAD_SAFE
 % /usr/local/Cellar/sdl2/2.0.14_1/bin/sdl2-config --libs
 -L/usr/local/lib -lSDL2
+```
 
+### Modify the makefile
 
- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -target x86_64-apple-macos11.1 -fmessage-length\=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit\=0 -std\=gnu11 -fmodules -gmodules -fmodules-cache-path\=/Users/eahumada/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -fmodules-prune-interval\=86400 -fmodules-prune-after\=345600 -fbuild-session-file\=/Users/eahumada/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror\=non-modular-include-in-framework-module -Wno-trigraphs -fpascal-strings -O0 -fno-common -Wno-missing-field-initializers -Wno-missing-prototypes -Werror\=return-type -Wdocumentation -Wunreachable-code -Wquoted-include-in-framework-header -Werror\=deprecated-objc-isa-usage -Werror\=objc-root-class -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wno-float-conversion -Wnon-literal-null-conversion -Wobjc-literal-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -DDEBUG\=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -Winfinite-recursion -Wcomma -Wblock-capture-autoreleasing -Wstrict-prototypes -Wno-semicolon-before-method-body -Wunguarded-availability -index-store-path /Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Index/DataStore -iquote /Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/A8E-generated-files.hmap -I/Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/A8E-own-target-headers.hmap -I/Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/A8E-all-target-headers.hmap -iquote /Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/A8E-project-headers.hmap -I/Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Products/Debug/include -I/Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/DerivedSources-normal/x86_64 -I/Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/DerivedSources/x86_64 -I/Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/DerivedSources -F/Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Products/Debug -MMD -MT dependencies -MF /Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/Objects-normal/x86_64/Gtia.d --serialize-diagnostics /Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/Objects-normal/x86_64/Gtia.dia -c /Users/eahumada/Downloads/Projects/A8E/Gtia.c -o /Users/eahumada/Library/Developer/Xcode/DerivedData/A8E-fgpcsawudpkbfugvtpjmlqhhoqpd/Build/Intermediates.noindex/A8E.build/Debug/A8E.build/Objects-normal/x86_64/Gtia.o
+### Make the proyect
+
+```
+make -f Makefile
+```
+### Ejecute the program
+./A8E
+
+## To compile for web:
+
+### Pre-requisites
+
+- Install emscripten emsdk
+- Source emsdk (`source emsdk_env.sh`)
+
+### Make the project
+```
+make -f Makefile.emsdk
+```
+
+### Open an web server in the directory (ex. httplz)
+```
+http
+```
+
+### Open in the webbrowser
+```
+open http://localhost:8000/A8E.html
+```
